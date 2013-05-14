@@ -1,12 +1,10 @@
-package main
+package markov
 
 import (
     "bufio"
-    "flag"
     "fmt"
     "io"
     "math/rand"
-    "os"
     "strings"
 )
 

@@ -99,6 +99,7 @@ func main() {
                 case "Unknown":
                     ircobj.Privmsg(myChan, fmt.Sprintf("Sorry, I don't understand you, %s", event.Nick))
 
+                /*
                 case "Impersonate":
                     target := event.Nick
                     // Use the initiator if no other name is specified.
@@ -109,6 +110,7 @@ func main() {
                     c.Build(userInput, command.Args[0])
                     ircobj.Privmsg(myChan, c.Generate(10))
 
+                */
                 case "Read":
                     ircobj.Privmsg(myChan, fmt.Sprintf("%s: Make me", event.Nick))
 
