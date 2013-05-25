@@ -5,7 +5,7 @@ import (
     "github.com/thoj/go-ircevent"
     "math/rand"
     "strings"
-    "time"
+    //"github.com/gmcquillan/godwit"
 )
 
 
@@ -82,8 +82,10 @@ func main() {
     ircobj.AddCallback("JOIN", func(event *irc.Event) {
         //fmt.Printf("%#v\n", event)
         curChan := event.Arguments[0]
-        myChannels = append(myChannels, curChan)
-        ircobj.Privmsg(curChan, "Hey! What'd I miss?")
+        if event.Nick == myName {
+            myChannels = append(myChannels, curChan)
+            ircobj.Privmsg(curChan, "Hey! What'd I miss?")
+        }
     })
 
     // It turns out that all messages are PRIVMSG
@@ -99,7 +101,6 @@ func main() {
                 case "Unknown":
                     ircobj.Privmsg(myChan, fmt.Sprintf("Sorry, I don't understand you, %s", event.Nick))
 
-                /*
                 case "Impersonate":
                     target := event.Nick
                     // Use the initiator if no other name is specified.
@@ -110,7 +111,6 @@ func main() {
                     c.Build(userInput, command.Args[0])
                     ircobj.Privmsg(myChan, c.Generate(10))
 
-                */
                 case "Read":
                     ircobj.Privmsg(myChan, fmt.Sprintf("%s: Make me", event.Nick))
 
