@@ -5,7 +5,7 @@ import (
 	"github.com/thoj/go-ircevent"
 	"math/rand"
 	"strings"
-	//"github.com/gmcquillan/godwit"
+	"time"
 )
 
 /*
@@ -100,13 +100,13 @@ func main() {
 				ircobj.Privmsg(myChan, fmt.Sprintf("Sorry, I don't understand you, %s", event.Nick))
 
 			case "Impersonate":
-				target := event.Nick
-				// Use the initiator if no other name is specified.
-				if len(command.Args) > 0 {
-					target = command.Args[0]
-				}
+				// target := event.Nick
+				// // Use the initiator if no other name is specified.
+				// if len(command.Args) > 0 {
+				// 	target = command.Args[0]
+				// }
 				c := NewChain(2)
-				c.Build(userInput, command.Args[0])
+				c.Build(strings.NewReader(command.Args[0]))
 				ircobj.Privmsg(myChan, c.Generate(10))
 
 			case "Read":
