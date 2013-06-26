@@ -27,39 +27,11 @@ func containsStr(slice []string, value string) bool {
 	return false
 }
 
-type Command struct {
-	Name   string   // Name for the Command
-	Args   []string // Any arguments to pass to function we call.
-	Source string   // Who requested it?
-}
-
-// Pulls out the commands and arguments out of a message directed toward the bot
-// the first parameter in the message is the bots name, so it's ignored here.
-func extractCommand(msg string, source string) (command Command) {
-	subStrings := strings.Split(msg, " ")
-	commandName := "Unknown"
-	if len(subStrings) > 1 {
-		commandName = strings.Title(subStrings[1])
-	}
-	args := []string{}
-	if len(subStrings) > 2 {
-		args = subStrings[2:]
-	}
-	return Command{commandName, args, source}
-}
-
-func saveUserInput(nick string, msg string, userInput map[string][]string) {
-	userInput[nick] = append(userInput[nick], msg)
-	fmt.Printf("Looking at User values: \n%#v\n", userInput[nick])
-}
-
 func main() {
-
 	myName := "godwit"
-	myHome := "#gobots"
+	myHome := "#inane"
 	myChannels := []string{}
 	myServer := "irc.freenode.net:6667"
-	userInput := map[string][]string{}
 
 	ircobj := irc.IRC(myName, myName)
 
@@ -92,39 +64,15 @@ func main() {
 	ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
 		if strings.HasPrefix(event.Message, myName) {
 			myChan := event.Arguments[0]
-			command := extractCommand(event.Message, event.Nick)
-
-			switch command.Name {
-
-			case "Unknown":
-				ircobj.Privmsg(myChan, fmt.Sprintf("Sorry, I don't understand you, %s", event.Nick))
-
-			case "Impersonate":
-				target := event.Nick
-				// Use the initiator if no other name is specified.
-				if len(command.Args) > 0 {
-					target = command.Args[0]
-				}
-				c := NewChain(2)
-				c.Build(strings.NewReader(strings.Join(userInput[target], " ")))
-				ircobj.Privmsg(myChan, c.Generate(10))
-
-			case "Read":
-				ircobj.Privmsg(myChan, fmt.Sprintf("%s: Make me", event.Nick))
-
-			case "Thanks":
-				target := ""
-				if len(command.Args) > 0 {
-					target = command.Args[0]
-				}
-
-				ircobj.Privmsg(myChan, fmt.Sprintf("!m %s", target))
+			command := ExtractCommand(event.Message, event.Nick)
+			response := RunCommand(command)
+			if len(response) > 0 {
+				ircobj.Privmsg(myChan, response)
 			}
 		}
 
 		// Save this user's data so we can impersonate them later!
 		// But only if this isn't a command for this bot.
-		saveUserInput(event.Nick, event.Message, userInput)
 
 		fmt.Printf("%#v\n", event)
 	})
