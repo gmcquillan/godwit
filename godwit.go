@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/thoj/go-ircevent"
 	"math/rand"
@@ -27,11 +28,16 @@ func containsStr(slice []string, value string) bool {
 	return false
 }
 
+var nick = flag.String("nick", "godwit", "nick of the bot")
+var channel = flag.String("chan", "#gobots", "channel to join")
+var server = flag.String("server", "irc.freenode.net:6667", "server and port to join")
+
 func main() {
-	myName := "godwit_mega"
-	myHome := "#gobots"
+	flag.Parse()
+	myName := *nick
+	myHome := *channel
 	myChannels := []string{}
-	myServer := "irc.freenode.net:6667"
+	myServer := *server
 
 	ircobj := irc.IRC(myName, myName)
 
