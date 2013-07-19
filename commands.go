@@ -31,7 +31,7 @@ func ExtractCommand(msg string, source string) (command Command) {
 
 func summarizeWebsite(htmlBody string) string {
 	strippedData := sanitize.HTML(htmlBody)
-	return fmt.Sprintf("%s.", strings.Join(strings.Split(strippedData, " ")[3:10], " "))
+	return fmt.Sprintf("%s.", strings.Join(strings.Split(strippedData, " ")[40:50], " "))
 }
 
 // Process command, return message for sending to channel.
@@ -51,10 +51,9 @@ func RunCommand(command Command) string {
 		if !strings.HasPrefix(url, "http://") {
 			url = fmt.Sprintf("http://%s", url)
 		}
-		resp, urlErr := http.Get(url)
-		fmt.Printf("%#v\n", resp.Body)
-		htmlBody, parseErr := ioutil.ReadAll(resp.Body)
-		if urlErr != nil && parseErr != nil {
+		resp, _ := http.Get(url)
+		htmlBody, _ := ioutil.ReadAll(resp.Body)
+        if htmlBody !=nil{
 			response = summarizeWebsite(string(htmlBody))
 		} else {
 			response = "Didn't quite get that; try again?"

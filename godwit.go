@@ -28,8 +28,8 @@ func containsStr(slice []string, value string) bool {
 }
 
 func main() {
-	myName := "godwit"
-	myHome := "#inane"
+	myName := "godwit_mega"
+	myHome := "#gobots"
 	myChannels := []string{}
 	myServer := "irc.freenode.net:6667"
 
